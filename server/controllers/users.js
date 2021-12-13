@@ -5,7 +5,7 @@ const User = require("../models/user");
 
 const OwnerPost = require("../models/ownerPost");
 const RenterPost = require("../models/renterPost");
-const bcrypt = require("bcrypt");
+const Comment = require("../models/comment");
 
 // prettier-ignore
 module.exports = {
@@ -110,21 +110,19 @@ module.exports = {
         }
     },
     create_One_OwnerPost_of_Specific_User: async (req, res, next) => {
+        const {adress, description, numberOfRooms, pictures, price } = req.body
         // retreive the ownerPost from the req.body & delete the userId attribute
-        let ownerPost = req.body;
+        const ownerPost = {adress, description, numberOfRooms, pictures, price }
 
         // save the id of the user
-        let userId = ownerPost.userId || req.params.userId;
+        const userId = req.params.userId;
 
-        // delete the userId attribute, because we will add later the user attribute which hold the id object of the user
-        delete ownerPost.userId;
         try {
             console.log("\nRequesting the server to create and save a new ownerPost, of a specific user, inside the database ...\n");
             // the server will try the following:
             // Step 1: Find the user
             const foundUser = await User.findById(userId)
 
-            
             // Create a new ownerPost into a database
             const newOwnerPost = await OwnerPost.create(ownerPost)
 
@@ -254,8 +252,8 @@ module.exports = {
         }
     },
     create_One_RenterPost_of_Specific_User: async (req, res, next) => {
-        // retreive the ownerPost from the req.body & delete the userId attribute
-        let renterPost = req.body;
+        const {content, state, city} = req.body
+        let renterPost = {content, state, city};
 
         // save the id of the user
         let userId = renterPost.userId || req.params.userId;
@@ -390,4 +388,60 @@ module.exports = {
             next(error)
         }
     },
+    find_All_Comments_of_Specific_RenterPost_of_Specific_User: async (req, res, next) => {
+        try {
+            console.log("\nRequesting the server to find all comments, of a specific renterPost, of a specific user, from the database ...\n");
+            // the server will try the following
+            const foundUser = await User
+                                    .findById(req.params.userId)
+                                    .populate(["renterPosts","ownerPosts"])
+                                    .select('-password')
+
+            let foundRenterPost = await RenterPost
+                                            .findById(req.params.renterpostId)
+                                            .populate(["comments","user"])
+                                            .select('-password')
+
+            res.status(200).json(foundRenterPost.comments)
+        } catch (error) {
+            next(error)
+        }
+    },
+    Create_One_Comments_of_Specific_RenterPost_of_Specific_User: async (req, res, next) => {
+        const { content } = req.body
+        const comment = { content }
+        try {
+            console.log("\nRequesting the server to create a new comment, of a specific renterPost, of a specific user, from the database ...\n");
+            // the server will try the following
+            const foundUser = await User
+                                    .findById(req.params.userId)
+                                    .populate(["renterPosts","ownerPosts"])
+                                    .select('-password')
+
+            let foundRenterPost = await RenterPost
+                                            .findById(req.params.renterpostId)
+                                            .select('-password')
+
+            const newComment = await Comment.create(comment)
+
+            const updatedRenterPost = await RenterPost.findByIdAndUpdate(
+                foundRenterPost?._id,
+                { $push: { comments: newComment?._id } },
+                { new: true }
+            )
+            .populate("renterPosts")
+
+            let updatedComment = await Comment.findByIdAndUpdate(
+                newComment?._id,
+                { user: foundUser?._id, renterPost: updatedRenterPost?._id },
+                { new: true }
+            )
+            .populate(["user", "renterPosts"])
+            .select("-password")
+
+            res.status(200).json(updatedComment)
+        } catch (error) {
+            next(error)
+        }
+    }
 };

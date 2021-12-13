@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const renterPostSchema = mongoose.Schema(
+const commentSchema = mongoose.Schema(
     {
         content: {
             type: String,
@@ -27,4 +27,4 @@ const renterPostSchema = mongoose.Schema(
     { versionKey: false } // to not save the __v attribute ... // Source: https://mongoosejs.com/docs/guide.html#versionKey
 );
 
-module.exports = mongoose.model("RenterPost", renterPostSchema);
+module.exports = mongoose.model("Comment", commentSchema);

@@ -4,7 +4,7 @@ const renterPostSchema = mongoose.Schema(
     {
         content: {
             type: String,
-            default: "Not Specified",
+            required: [true, "Please enter a comment"],
         },
         user: {
             type: mongoose.Schema.Types.ObjectId,
@@ -13,9 +13,11 @@ const renterPostSchema = mongoose.Schema(
         comments: [],
         state: {
             type: String,
+            required: [true, "Please enter a state"],
         },
         city: {
             type: String,
+            required: [true, "Please enter a city"],
         },
         createdAt: {
             type: Date,
