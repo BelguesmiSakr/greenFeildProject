@@ -56,16 +56,8 @@ const Login = ({ setcurrentUser }) => {
 				console.log(user);
 				axios.post("/auth/signup", user);
 			})
-			.then(({ data }) => {
-				setSignup({
-					username: "",
-					name: "",
-					email: "",
-					password: "",
-					status: data,
-					//reset the signup state
-					//status : data => "username already exist" - "account created"
-				});
+			.then(() => {
+				setView("signin");
 			})
 			.catch((err) =>
 				console.log("Login Component => signup error : ", err)
@@ -121,7 +113,7 @@ const Login = ({ setcurrentUser }) => {
 						onChange={changeSignUp}
 						name='password'
 						placeholder='password'
-						type='text'
+						type='password'
 					/>
 					<input
 						className='name-input'
