@@ -5,25 +5,25 @@ const ownerPostSchema = mongoose.Schema(
         // label: { type: String, default: "Not Specified" },
         adress: {
             type: String,
-            default: "Not Specified",
+            required: [true, "Please enter an adress"],
         },
         description: {
             type: String,
-            default: "Not Specified",
+            required: [true, "Please enter a description"],
         },
         numberOfRooms: {
             type: Number,
-            default: 1,
+            required: [true, "Please enter a number of rooms"],
         },
         pictures: [
             {
                 type: String,
-                default: "",
+                required: [true, "Please upload at least a picture"],
             },
         ],
         price: {
             type: Number,
-            default: 0,
+            required: [true, "Please enter a price"],
         },
         user: {
             type: mongoose.Schema.Types.ObjectId,
