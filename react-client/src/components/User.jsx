@@ -30,9 +30,68 @@ const User = ({ user }) => {
 			<UserPofile user={user} />
 			{userInput}
 			{/* user Posts List with delete and update options  */}
-			{userPosts.map((post, i) => (
-				<Post post={post} key={i} />
-			))}
+			<div className='announces-container' style={{ width: "100%" }}>
+				{userPosts.map((post, i) => (
+					<div className='announce' key={i}>
+						<div className='title-announce'>
+							<div
+								className='gallery'
+								onClick={() => setSlideShow(true)}
+							>
+								<div className='img'>
+									<Image
+										cloudName='geekitten'
+										public_id={post.pictures[0]}
+									/>
+								</div>
+								<div className='others'>
+									<Image
+										cloudName='geekitten'
+										public_id={post.pictures[1]}
+									/>
+								</div>
+								<div className='others'>
+									<Image
+										cloudName='geekitten'
+										public_id={post.pictures[2]}
+									/>
+								</div>
+							</div>
+							<div className='details'>
+								<span></span>
+								<span>
+									<b>{post.username}</b>
+								</span>
+								<span>
+									<b>Location :</b> {post.adress}
+								</span>
+								<span>
+									<b>Rooms :</b> {"S+" + post.numberOfRooms}
+								</span>
+								<span>
+									<b>Price :</b> {post.price} tnd/month
+								</span>
+
+								{/* <span> <b>Views :</b> 12 </span> */}
+								<span>
+									<button className='postBtn'>
+										<img src='https://img.icons8.com/ios-filled/15/4a90e2/new-message.png' />
+										Contact
+									</button>
+									<button className='postBtn'>
+										<img src='https://img.icons8.com/ios/15/26e07f/add-bookmark.png' />
+										Add To List
+									</button>
+								</span>
+							</div>
+						</div>
+						<div className='description'>
+							<b>Description :</b>
+							{post.description}
+						</div>
+					</div>
+				))}
+			</div>
 		</div>
 	);
 };
