@@ -56,7 +56,7 @@ const Login = ({ setcurrentUser }) => {
 				console.log(user);
 				axios.post("/auth/signup", user);
 			})
-			.then(({ data }) => {
+			.then(() => {
 				setView("signin");
 			})
 			.catch((err) =>
